@@ -1,0 +1,18 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/restorio-auth/*.log
+  fields:
+    service: auth
+  fields_under_root: true
+- type: log
+  enabled: true
+  paths:
+    - /var/log/restorio-telegram/*.log
+  fields:
+    service: telegram
+  fields_under_root: true
+
+output.logstash:
+  hosts: ["logstash:5044"]
