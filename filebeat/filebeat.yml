@@ -1,18 +1,34 @@
 filebeat.inputs:
-- type: log
-  enabled: true
-  paths:
-    - /var/log/restorio-auth/*.log
-  fields:
-    service: auth
-  fields_under_root: true
-- type: log
-  enabled: true
-  paths:
-    - /var/log/restorio-telegram/*.log
-  fields:
-    service: telegram
-  fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/restorio-auth/*.log
+    fields:
+      log_source: auth_logs
+    fields_under_root: true
+  
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/restorio-telegram/*.log
+    fields:
+      log_source: telegram_logs
+    fields_under_root: true
 
 output.logstash:
-  hosts: ["logstash:5044"]
+  hosts: ["${LOGSTASH_HOSTS}"]
+
+setup.kibana:
+  host: "${KIBANA_HOST}"
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+  
